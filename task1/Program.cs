@@ -7,7 +7,7 @@ namespace task1
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine(Api.GetFileByPath(@"D:\LZT!")[1]);
+            Console.WriteLine(((WIN32_FIND_DATA) Api.GetFileByPath(@"D:\LZT!")[1]).ftLastAccessTime.dwHighDateTime);
         }
 
         public static void PrintAllFilesWithFileTime()
