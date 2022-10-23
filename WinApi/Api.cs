@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Runtime.InteropServices.ComTypes;
 using static WinApi.PinvokeDlls;
 
@@ -52,10 +53,10 @@ namespace WinApi
         public static Dictionary<string, Dictionary<string, FILETIME>> Foo(string directoryName)
         {
             WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
-            IntPtr h = FindFirstFile(directoryName + @"\*.*", out wfd);
+            IntPtr file = FindFirstFile(directoryName + @"\*.*", out wfd);
             Dictionary<string, Dictionary<string, FILETIME>> filesWithFileTime =
                 new Dictionary<string, Dictionary<string, FILETIME>>();
-            while (FindNextFile(h, out wfd))
+            while (FindNextFile(file, out wfd))
                 filesWithFileTime.Add(directoryName + wfd.cFileName,
                     new Dictionary<string, FILETIME>()
                     {
@@ -64,8 +65,30 @@ namespace WinApi
                         {"File last write time", wfd.ftLastWriteTime}
                     }
                 );
-            FindClose(h);
+            FindClose(file);
             return filesWithFileTime;
+        }
+
+        /// <param name="path">path</param>
+        /// <returns>array of two: [0] - IntPtr, [1] - WIN32_FIND_DATA</returns>
+        public static ValueType[] GetFileByPath(string path)
+        {
+            WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
+            IntPtr file = FindFirstFile(path, out wfd);
+            FindClose(file);
+            return new ValueType[] {file, wfd};
+        }
+
+        public static void SetFileTimes(IntPtr hFile, DateTime creationTime, DateTime accessTime, DateTime writeTime)
+        {
+            long lCreationTime = creationTime.ToFileTime();
+            long lAccessTime = accessTime.ToFileTime();
+            long lWriteTime = writeTime.ToFileTime();
+
+            if (!SetFileTime(hFile, ref lCreationTime, ref lAccessTime, ref lWriteTime))
+            {
+                throw new Win32Exception();
+            }
         }
     }
 }

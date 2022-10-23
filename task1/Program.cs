@@ -7,6 +7,11 @@ namespace task1
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine(Api.GetFileByPath(@"D:\LZT!")[1]);
+        }
+
+        public static void PrintAllFilesWithFileTime()
+        {
             foreach (var keyValuePair in Api.Foo(Api.GetDisks()[1]))
             {
                 Console.WriteLine(keyValuePair.Key);

@@ -21,9 +21,14 @@ namespace WinApi
 
         [DllImport("kernel32", CharSet = CharSet.Auto)]
         public static extern IntPtr FindFirstFile(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
-        
+
         [DllImport("kernel32", CharSet = CharSet.Auto)]
         internal static extern bool FindClose(IntPtr hFindFile);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool SetFileTime(IntPtr hFile, ref long lpCreationTime, ref long lpLastAccessTime,
+            ref long lpLastWriteTime);
     }
 
     internal enum FINDEX_INFO_LEVELS
@@ -41,7 +46,7 @@ namespace WinApi
 
     // The CharSet must match the CharSet of the corresponding PInvoke signature
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-    internal struct WIN32_FIND_DATA
+    public struct WIN32_FIND_DATA
     {
         public uint dwFileAttributes;
         public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
