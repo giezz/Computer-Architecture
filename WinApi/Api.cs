@@ -9,6 +9,7 @@ namespace WinApi
 {
     public class Api
     {
+        /// <returns>List of all logical disks</returns>
         public static List<string> GetDisks()
         {
             const int size = 512;
@@ -49,7 +50,9 @@ namespace WinApi
             FindClose(h);
             return files;
         }
-
+        
+        /// <param name="directoryName">directoryName</param>
+        /// <returns>Dictionary of file names and timestamps</returns>
         public static Dictionary<string, Dictionary<string, FILETIME>> Foo(string directoryName)
         {
             WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
