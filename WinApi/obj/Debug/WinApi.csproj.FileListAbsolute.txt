@@ -1,0 +1,6 @@
+C:\Users\Admin\RiderProjects\Computer-Architecture\WinApi\bin\Debug\WinApi.dll
+C:\Users\Admin\RiderProjects\Computer-Architecture\WinApi\bin\Debug\WinApi.pdb
+C:\Users\Admin\RiderProjects\Computer-Architecture\WinApi\obj\Debug\WinApi.csproj.AssemblyReference.cache
+C:\Users\Admin\RiderProjects\Computer-Architecture\WinApi\obj\Debug\WinApi.csproj.CoreCompileInputs.cache
+C:\Users\Admin\RiderProjects\Computer-Architecture\WinApi\obj\Debug\WinApi.dll
+C:\Users\Admin\RiderProjects\Computer-Architecture\WinApi\obj\Debug\WinApi.pdb

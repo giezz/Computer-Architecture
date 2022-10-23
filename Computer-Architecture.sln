@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task1", "task1\task1.csproj", "{D6E4CB8D-433A-45C2-80A5-B32AA3DB1282}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinApi", "WinApi\WinApi.csproj", "{A14E6A9C-6ECA-4BA2-A3D5-497A7829839C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6E4CB8D-433A-45C2-80A5-B32AA3DB1282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6E4CB8D-433A-45C2-80A5-B32AA3DB1282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6E4CB8D-433A-45C2-80A5-B32AA3DB1282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6E4CB8D-433A-45C2-80A5-B32AA3DB1282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A14E6A9C-6ECA-4BA2-A3D5-497A7829839C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A14E6A9C-6ECA-4BA2-A3D5-497A7829839C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A14E6A9C-6ECA-4BA2-A3D5-497A7829839C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A14E6A9C-6ECA-4BA2-A3D5-497A7829839C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

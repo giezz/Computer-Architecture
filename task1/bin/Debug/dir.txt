@@ -1,0 +1,6 @@
+..
+dir.txt
+task1.exe
+task1.pdb
+WinApi.dll
+WinApi.pdb
