@@ -40,32 +40,32 @@ namespace WinApi
             return disks;
         }
 
-        public static List<string> GetFilesByDirectoryName(string directoryName)
-        {
-            WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
-            IntPtr h = FindFirstFile(directoryName + @"\*.*", out wfd);
-            List<string> files = new List<string>();
-            while (FindNextFile(h, out wfd))
-                files.Add(directoryName + wfd.cFileName);
-            FindClose(h);
-            return files;
-        }
-        
+        // public static List<string> GetFilesByDirectoryName(string directoryName)
+        // {
+        //     WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
+        //     IntPtr h = FindFirstFile(directoryName + @"\*.*", out wfd);
+        //     List<string> files = new List<string>();
+        //     while (FindNextFile(h, out wfd))
+        //         files.Add(directoryName + wfd.cFileName);
+        //     FindClose(h);
+        //     return files;
+        // }
+
         /// <param name="directoryName">directoryName</param>
         /// <returns>Dictionary of file names and timestamps</returns>
-        public static Dictionary<string, Dictionary<string, FILETIME>> Foo(string directoryName)
+        public static Dictionary<string, Dictionary<string, DateTime>> GetFilesByDirectoryName(string directoryName)
         {
             WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
             IntPtr file = FindFirstFile(directoryName + @"\*.*", out wfd);
-            Dictionary<string, Dictionary<string, FILETIME>> filesWithFileTime =
-                new Dictionary<string, Dictionary<string, FILETIME>>();
+            Dictionary<string, Dictionary<string, DateTime>> filesWithFileTime =
+                new Dictionary<string, Dictionary<string, DateTime>>();
             while (FindNextFile(file, out wfd))
                 filesWithFileTime.Add(directoryName + wfd.cFileName,
-                    new Dictionary<string, FILETIME>()
+                    new Dictionary<string, DateTime>()
                     {
-                        {"File creation time", wfd.ftCreationTime},
-                        {"File last access time", wfd.ftLastAccessTime},
-                        {"File last write time", wfd.ftLastWriteTime}
+                        {"File creation time:", DateTime.FromFileTime(FileTimeToInterval(wfd.ftCreationTime))},
+                        {"File last access time:", DateTime.FromFileTime(FileTimeToInterval(wfd.ftLastAccessTime))},
+                        {"File last write time:", DateTime.FromFileTime(FileTimeToInterval(wfd.ftLastWriteTime))}
                     }
                 );
             FindClose(file);
@@ -82,6 +82,12 @@ namespace WinApi
             return new ValueType[] {file, wfd};
         }
 
+        public static IntPtr GetFileIntPtr(string path)
+        {
+            WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
+            return FindFirstFile(path, out wfd);
+        }
+        
         public static void SetFileTimes(IntPtr hFile, DateTime creationTime, DateTime accessTime, DateTime writeTime)
         {
             long lCreationTime = creationTime.ToFileTime();
@@ -92,6 +98,15 @@ namespace WinApi
             {
                 throw new Win32Exception();
             }
+        }
+        
+        private static long FileTimeToInterval(FILETIME fileTime)
+        {
+            long interval = 0;
+            interval |= (uint) fileTime.dwHighDateTime;
+            interval <<= sizeof(uint) * 8;
+            interval |= (uint) fileTime.dwLowDateTime;
+            return interval;
         }
     }
 }

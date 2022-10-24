@@ -47,9 +47,9 @@
         <Project>{a8b795ca-3ad1-4e34-a4f2-6a58ff612b66}</Project>
         <Name>ClassLibrary2</Name>
       </ProjectReference>
-      <ProjectReference Include="..\WinApi\WinApi.csproj">
+      <ProjectReference Include="..\WinApiClassLibrary\WinApiClassLibrary.csproj">
         <Project>{a14e6a9c-6eca-4ba2-a3d5-497a7829839c}</Project>
-        <Name>WinApi</Name>
+        <Name>WinApiClassLibrary</Name>
       </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
