@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 using static WinApi.PinvokeDlls;
 
 namespace WinApi
 {
-    public class Api
+    public static class Api
     {
+        public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+
         /// <returns>List of all logical disks</returns>
         public static List<string> GetDisks()
         {
@@ -39,18 +42,7 @@ namespace WinApi
                 disks.Add(s);
             return disks;
         }
-
-        // public static List<string> GetFilesByDirectoryName(string directoryName)
-        // {
-        //     WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
-        //     IntPtr h = FindFirstFile(directoryName + @"\*.*", out wfd);
-        //     List<string> files = new List<string>();
-        //     while (FindNextFile(h, out wfd))
-        //         files.Add(directoryName + wfd.cFileName);
-        //     FindClose(h);
-        //     return files;
-        // }
-
+        
         /// <param name="directoryName">directoryName</param>
         /// <returns>Dictionary of file names and timestamps</returns>
         public static Dictionary<string, Dictionary<string, DateTime>> GetFilesByDirectoryName(string directoryName)
@@ -72,34 +64,42 @@ namespace WinApi
             return filesWithFileTime;
         }
 
-        /// <param name="path">path</param>
-        /// <returns>array of two: [0] - IntPtr, [1] - WIN32_FIND_DATA</returns>
-        public static ValueType[] GetFileByPath(string path)
+        public static IntPtr GetFileDescriptor(string path)
         {
-            WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
-            IntPtr file = FindFirstFile(path, out wfd);
-            FindClose(file);
-            return new ValueType[] {file, wfd};
+            IntPtr fileHandle = CreateFile(
+                path,
+                (FileAccess) EFileAccess.FILE_WRITE_ATTRIBUTES,
+                FileShare.ReadWrite,
+                IntPtr.Zero,
+                FileMode.Open,
+                (FileAttributes) EFileAttributes.BackupSemantics,
+                IntPtr.Zero
+            );
+
+            if (fileHandle == INVALID_HANDLE_VALUE)
+            {
+                CloseHandle(fileHandle);
+                throw new Exception("Invalid file descriptor");
+            }
+
+            return fileHandle;
         }
 
-        public static IntPtr GetFileIntPtr(string path)
+        public static void SetFileTimes(string path, DateTime creationTime, DateTime accessTime, DateTime writeTime)
         {
-            WIN32_FIND_DATA wfd = new WIN32_FIND_DATA();
-            return FindFirstFile(path, out wfd);
-        }
-        
-        public static void SetFileTimes(IntPtr hFile, DateTime creationTime, DateTime accessTime, DateTime writeTime)
-        {
+            IntPtr hFile = GetFileDescriptor(path);
             long lCreationTime = creationTime.ToFileTime();
             long lAccessTime = accessTime.ToFileTime();
             long lWriteTime = writeTime.ToFileTime();
 
             if (!SetFileTime(hFile, ref lCreationTime, ref lAccessTime, ref lWriteTime))
             {
+                CloseHandle(hFile);
                 throw new Win32Exception();
             }
+            CloseHandle(hFile);
         }
-        
+
         private static long FileTimeToInterval(FILETIME fileTime)
         {
             long interval = 0;
