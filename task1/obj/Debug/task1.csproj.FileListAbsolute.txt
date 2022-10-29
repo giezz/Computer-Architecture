@@ -6,3 +6,4 @@ C:\Users\Admin\RiderProjects\Computer-Architecture\task1\obj\Debug\task1.exe
 C:\Users\Admin\RiderProjects\Computer-Architecture\task1\obj\Debug\task1.pdb
 C:\Users\Admin\RiderProjects\Computer-Architecture\task1\bin\Debug\WinApiClassLibrary.dll
 C:\Users\Admin\RiderProjects\Computer-Architecture\task1\bin\Debug\WinApiClassLibrary.pdb
+C:\Users\Admin\RiderProjects\Computer-Architecture\task1\obj\Debug\task1.csproj.CopyComplete

@@ -1,35 +1,62 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using WinApi;
 
 namespace task1
 {
-    internal class Program
+    internal static class Program
     {
         public static void Main(string[] args)
         {
-            // Console.WriteLine(((WIN32_FIND_DATA) Api.GetFileByPath(@"D:\LZT!")[1]).ftLastAccessTime.dwHighDateTime);
-            PrintAllFilesWithFileTime(1);
-
-            //@"D:\testForWinApi"
-
-            Api.SetFileTimes(
-                Api.GetFileIntPtr(@"D:\testForWinApi"),
-                new DateTime(2015, 01, 01),
-                new DateTime(2015, 01, 01),
-                new DateTime(2015, 01, 01)
-            );
-            /*
-                Необработанное исключение: 
-                System.ComponentModel.Win32Exception: Неверный дескриптор
-                в WinApi.Api.SetFileTimes(IntPtr hFile, DateTime creationTime, DateTime accessTime, DateTime writeTime) 
-                в C:\Users\Admin\RiderProjects\Computer-Architecture\WinApiClassLibrary\Api.cs:строка 108
-                в task1.Program.Main(String[] args) в C:\Users\Admin\RiderProjects\Computer-Architecture\task1\Program.cs:строка 13
-            */
+            Dialogue();
         }
 
-        public static void PrintAllFilesWithFileTime(int i)
+        private static void Dialogue()
         {
-            foreach (var keyValuePair in Api.GetFilesByDirectoryName(Api.GetDisks()[i]))
+            List<string> disks = Api.GetDisks();
+            foreach (var disk in disks) 
+                Console.Write(disk + " ");
+
+            Console.WriteLine("\nВыберите диск");
+            string d = Convert.ToString(Console.ReadLine());
+            string selectedDisk = disks
+                .Where(p => p.ToLower().StartsWith(d, false, CultureInfo.CurrentCulture))
+                .First();
+
+            Console.WriteLine($"Вы выбрали диск {selectedDisk}. Показать все файлы выбранного диска (y/n)?");
+            bool chooseOption = false;
+            string co = Convert.ToString(Console.ReadLine());
+
+            if (co == "yes" || co == "y") 
+                chooseOption = true;
+            if (chooseOption) 
+                PrintAllFilesWithFileTime(selectedDisk);
+
+            Console.WriteLine("Пропишите путь к файлу/папке у которого хотите изменить временную метку");
+            string path = Convert.ToString(Console.ReadLine());
+            
+            Console.WriteLine("Введите год");
+            int year = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Введите месяц");
+            int month = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Введите день");
+            int day = Convert.ToInt32(Console.ReadLine());
+            
+            Api.SetFileTimes(
+                path,
+                new DateTime(year, month, day),
+                new DateTime(year, month, day),
+                new DateTime(year, month, day)
+            );
+
+            Console.WriteLine("Временная метка изменена");
+        }
+
+        private static void PrintAllFilesWithFileTime(string directoryName)
+        {
+            foreach (var keyValuePair in Api.GetFilesByDirectoryName(directoryName))
             {
                 Console.WriteLine(keyValuePair.Key);
                 foreach (var valuePair in keyValuePair.Value)
