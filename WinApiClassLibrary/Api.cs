@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
+using System.Windows.Forms;
 using static WinApi.PinvokeDlls;
 
 namespace WinApi
@@ -11,6 +12,27 @@ namespace WinApi
     public static class Api
     {
         public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+
+        public static void Foo()
+        {
+            int value = 0;
+
+            unsafe
+            {
+                GetKeyboardType(0);
+            } //Обязательно!!
+
+            try
+            {
+                value = GetKeyboardType(0);
+                MessageBox.Show(value.ToString());
+            }
+            catch (EntryPointNotFoundException)
+
+            {
+                MessageBox.Show("Ошибка " + (value - 1).ToString());
+            }
+        }
 
         /// <returns>List of all logical disks</returns>
         public static List<string> GetDisks()
@@ -42,7 +64,7 @@ namespace WinApi
                 disks.Add(s);
             return disks;
         }
-        
+
         /// <param name="directoryName">directoryName</param>
         /// <returns>Dictionary of file names and timestamps</returns>
         public static Dictionary<string, Dictionary<string, DateTime>> GetFilesByDirectoryName(string directoryName)
@@ -68,11 +90,11 @@ namespace WinApi
         {
             IntPtr fileHandle = CreateFile(
                 path,
-                (FileAccess) EFileAccess.FILE_WRITE_ATTRIBUTES,
+                (FileAccess) PinvokeEnums.EFileAccess.FILE_WRITE_ATTRIBUTES,
                 FileShare.ReadWrite,
                 IntPtr.Zero,
                 FileMode.Open,
-                (FileAttributes) EFileAttributes.BackupSemantics,
+                (FileAttributes) PinvokeEnums.EFileAttributes.BackupSemantics,
                 IntPtr.Zero
             );
 
@@ -97,6 +119,7 @@ namespace WinApi
                 CloseHandle(hFile);
                 throw new Win32Exception();
             }
+
             CloseHandle(hFile);
         }
 
