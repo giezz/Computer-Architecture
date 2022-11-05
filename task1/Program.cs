@@ -15,6 +15,7 @@ namespace task1
 
         private static void Dialogue()
         {
+            Console.WriteLine("Обнаруженные диски");
             List<string> disks = Api.GetDisks();
             foreach (var disk in disks) 
                 Console.Write(disk + " ");
@@ -22,7 +23,7 @@ namespace task1
             Console.WriteLine("\nВыберите диск");
             string d = Convert.ToString(Console.ReadLine());
             string selectedDisk = disks
-                .Where(p => p.ToLower().StartsWith(d, false, CultureInfo.CurrentCulture))
+                .Where(p => p.ToLower().StartsWith(d, true, CultureInfo.CurrentCulture))
                 .First();
 
             Console.WriteLine($"Вы выбрали диск {selectedDisk}. Показать все файлы выбранного диска (y/n)?");
