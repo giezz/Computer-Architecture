@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 using WinApi;
 
@@ -8,34 +6,23 @@ namespace task3
 {
     public partial class Form1 : Form
     {
+        private static IntPtr handle;
+        private static IntPtr dc;
+        
         public Form1()
         {
             InitializeComponent();
-            
-            Thread thread = new Thread(CheckMouseState);
-            thread.Start();
-            
+            handle = Handle;
+            dc = PinvokeDlls.GetDC(handle);
         }
 
-        private void CheckMouseState()
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            IntPtr activeWindowPtr = PinvokeDlls.GetActiveWindow();
-            var dc = PinvokeDlls.GetDC(new IntPtr(0));
-            POINT p;
-            while (true)
+            if (e.Button == MouseButtons.Left)
             {
-                short lmbKeySate = PinvokeDlls.GetKeyState(PinvokeEnums.VirtualKeyStates.VK_LBUTTON);
-                PinvokeDlls.GetCursorPos(out p);
-                if (lmbKeySate == -127 || lmbKeySate == -128)
-                {
-                    PinvokeDlls.SetPixel(dc, p.X, p.Y, 1686397);
-                }
+                PinvokeDlls.SetPixel(dc, e.X, e.Y, 1686397);
+                // Console.WriteLine("test mouse move event");
             }
-        }
-
-        private int ColorToRGB(Color crColor)
-        {
-            return (crColor.B << 16 | crColor.G << 8 | crColor.R);
         }
     }
 }

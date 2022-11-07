@@ -31,10 +31,8 @@ namespace task1
             string co = Convert.ToString(Console.ReadLine());
 
             if (co == "yes" || co == "y") 
-                chooseOption = true;
-            if (chooseOption) 
                 PrintAllFilesWithFileTime(selectedDisk);
-
+            
             Console.WriteLine("Пропишите путь к файлу/папке у которого хотите изменить временную метку");
             string path = Convert.ToString(Console.ReadLine());
             
