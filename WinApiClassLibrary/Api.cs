@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
-using System.Windows.Forms;
 using static WinApi.PinvokeDlls;
 
 namespace WinApi
@@ -12,28 +11,7 @@ namespace WinApi
     public static class Api
     {
         public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
-
-        public static void Foo()
-        {
-            int value = 0;
-
-            unsafe
-            {
-                GetKeyboardType(0);
-            } //Обязательно!!
-
-            try
-            {
-                value = GetKeyboardType(0);
-                MessageBox.Show(value.ToString());
-            }
-            catch (EntryPointNotFoundException)
-
-            {
-                MessageBox.Show("Ошибка " + (value - 1).ToString());
-            }
-        }
-
+        
         /// <returns>List of all logical disks</returns>
         public static List<string> GetDisks()
         {

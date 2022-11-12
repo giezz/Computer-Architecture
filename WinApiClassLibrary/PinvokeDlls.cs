@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
@@ -10,24 +9,27 @@ namespace WinApi
 {
     public class PinvokeDlls
     {
+        [DllImport("user32.dll")]
+        public static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
         [DllImport("gdi32.dll")]
         public static extern uint SetPixel(IntPtr hdc, int X, int Y, uint crColor);
-        
-        [DllImport("user32.dll", SetLastError=true)]
+
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr GetDC(IntPtr hWnd);
-        
+
         [DllImport("user32.dll")]
-        public static extern IntPtr GetActiveWindow();
-        
-        [DllImport("User32.dll", CharSet = CharSet.Auto)]
-        internal static extern int GetKeyboardType(int value);
+        public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
         [DllImport("USER32.dll")]
         public static extern short GetKeyState(PinvokeEnums.VirtualKeyStates nVirtKey);
-        
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetCursorPos(out POINT lpPoint);
+        public static extern bool GetKeyboardState(byte[] lpKeyState);
+        
+        [DllImport("user32.dll", SetLastError=false)]
+        public static extern UIntPtr GetMessageExtraInfo();
 
         [DllImport("kernel32.dll")]
         // static extern uint GetLogicalDriveStrings(uint nBufferLength,
@@ -70,35 +72,35 @@ namespace WinApi
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CloseHandle(IntPtr hObject);
     }
-    
+
     [StructLayout(LayoutKind.Sequential)]
-    public struct POINT
+    public struct INPUT
     {
-        public int X;
-        public int Y;
+        public PinvokeEnums.InputType type;
+        public InputUnion U;
 
-        public POINT(int x, int y)
+        public static int Size
         {
-            X = x;
-            Y = y;
-        }
-
-        public static implicit operator Point(POINT p)
-        {
-            return new Point(p.X, p.Y);
-        }
-
-        public static implicit operator POINT(Point p)
-        {
-            return new POINT(p.X, p.Y);
-        }
-
-        public override string ToString()
-        {
-            return $"X: {X}, Y: {Y}";
+            get { return Marshal.SizeOf(typeof(INPUT)); }
         }
     }
-    
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct InputUnion
+    {
+        [FieldOffset(0)] public KEYBDINPUT ki;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct KEYBDINPUT
+    {
+        public PinvokeEnums.VirtualKeyShort wVk;
+        public PinvokeEnums.ScanCodeShort wScan;
+        public PinvokeEnums.KEYEVENTF dwFlags;
+        public int time;
+        public UIntPtr dwExtraInfo;
+    }
+
     // The CharSet must match the CharSet of the corresponding PInvoke signature
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct WIN32_FIND_DATA
