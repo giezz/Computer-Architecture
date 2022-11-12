@@ -38,7 +38,7 @@ namespace task3
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //TODO : add ReleaseDC implementation
+            PinvokeDlls.ReleaseDC(Handle, dc);
         }
     }
 }

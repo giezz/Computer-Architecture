@@ -27,7 +27,6 @@ namespace task1
                 .First();
 
             Console.WriteLine($"Вы выбрали диск {selectedDisk}. Показать все файлы выбранного диска (y/n)?");
-            bool chooseOption = false;
             string co = Convert.ToString(Console.ReadLine());
 
             if (co == "yes" || co == "y") 
