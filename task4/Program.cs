@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Reflection;
+using task4Library;
 
 namespace task4
 {
@@ -7,25 +9,49 @@ namespace task4
     {
         public static void Main(string[] args)
         {
+            DynamicLoad();
+            StaticLoad();
+        }
+
+        private static void StaticLoad()
+        {
+            ClassForStaticLoad.PaintLine3(
+                new IntPtr(0),
+                new Point(0, 0),
+                new Point(ClassForStaticLoad.GetMonitorResolution()[0], ClassForStaticLoad.GetMonitorResolution()[1]),
+                false
+            );
+            ClassForStaticLoad.PaintLine3(
+                new IntPtr(0),
+                new Point(ClassForStaticLoad.GetMonitorResolution()[0], 0),
+                new Point(0, ClassForStaticLoad.GetMonitorResolution()[1]),
+                false
+            );
+        }
+
+
+        private static void DynamicLoad()
+        {
             int[,] matrixA = PopulateMatrix(100, 100);
             int[,] matrixB = PopulateMatrix(100, 100);
-            
-            
+
+
             Assembly a = Assembly.Load("task4Library");
-            Object o = a.CreateInstance("task4Library.Class1");
-            Type t = a.GetType("task4Library.Class1");
-            MethodInfo[] mi = t.GetMethods();
-            Console.WriteLine(mi[0].Invoke(o, new object[] {matrixA, matrixB}));
-            Console.WriteLine(mi[1].Invoke(o, null));
+            Object o = a.CreateInstance("task4Library.ClassForDynamicLoad");
+            Type t = a.GetType("task4Library.ClassForDynamicLoad");
+            MethodInfo multiplicationMi = t.GetMethod("Multiplication", BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo getTimeMi = t.GetMethod("GetTime", BindingFlags.NonPublic | BindingFlags.Instance);
+            Console.WriteLine(multiplicationMi.Invoke(o, new object[] {matrixA, matrixB}));
+            Console.WriteLine(getTimeMi.Invoke(o, null));
             
             matrixA = PopulateMatrix(1000, 1000);
             matrixB = PopulateMatrix(1000, 1000);
             
-            Console.WriteLine(mi[0].Invoke(o, new object[] {matrixA, matrixB}));
-            Console.WriteLine(mi[1].Invoke(o, null));
+            Console.WriteLine(multiplicationMi.Invoke(o, new object[] {matrixA, matrixB}));
+            Console.WriteLine(getTimeMi.Invoke(o, null));
         }
 
-        public static int[,] PopulateMatrix(int dim1, int dim2)
+        private static int[,] PopulateMatrix(int dim1, int dim2)
         {
             int[,] matrix = new int[dim1, dim2];
             Random random = new Random();

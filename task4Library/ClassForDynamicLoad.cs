@@ -3,12 +3,12 @@ using System.Diagnostics;
 
 namespace task4Library
 {
-    public class Class1
+    public class ClassForDynamicLoad
     {
         private long multiplicationTime;
         private Stopwatch stopwatch;
 
-        public int[,] Multiplication(int[,] a, int[,] b)
+        private int[,] Multiplication(int[,] a, int[,] b)
         {
             if (a.GetLength(1) != b.GetLength(0)) throw new Exception("Матрицы нельзя перемножить");
             int[,] resultMatrix = new int[a.GetLength(0), b.GetLength(1)];
@@ -30,7 +30,7 @@ namespace task4Library
             return resultMatrix;
         }
 
-        public long GetTime()
+        private long GetTime()
         {
             return multiplicationTime;
         }
