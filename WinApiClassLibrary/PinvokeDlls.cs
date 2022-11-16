@@ -19,6 +19,9 @@ namespace WinApi
         public static extern IntPtr GetDC(IntPtr hWnd);
 
         [DllImport("user32.dll")]
+        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
+        
+        [DllImport("user32.dll")]
         public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
         [DllImport("USER32.dll")]
@@ -27,8 +30,8 @@ namespace WinApi
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetKeyboardState(byte[] lpKeyState);
-        
-        [DllImport("user32.dll", SetLastError=false)]
+
+        [DllImport("user32.dll", SetLastError = false)]
         public static extern UIntPtr GetMessageExtraInfo();
 
         [DllImport("kernel32.dll")]

@@ -6,6 +6,8 @@ namespace task2
 {
     public partial class Form1 : Form
     {
+        static short numLockKeyState = PinvokeDlls.GetKeyState(PinvokeEnums.VirtualKeyStates.VK_NUMLOCK);
+        static short lbmKeyState = PinvokeDlls.GetKeyState(PinvokeEnums.VirtualKeyStates.VK_LBUTTON);
         public Form1()
         {
             InitializeComponent();
@@ -13,23 +15,22 @@ namespace task2
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            GetKeyState();
-        }
-
-        public static unsafe void GetKeyState()
-        {
-            INPUT[] input = new INPUT[1];
-            input[0].type = PinvokeEnums.InputType.INPUT_KEYBOARD;
-            input[0].U.ki.time = 0;
-            input[0].U.ki.dwFlags = 0;
-            input[0].U.ki.dwExtraInfo = PinvokeDlls.GetMessageExtraInfo();
-            input[0].U.ki.wVk = PinvokeEnums.VirtualKeyShort.SPACE;
-            PinvokeDlls.SendInput(2, input, sizeof(INPUT));
-            short numLockKeyState = PinvokeDlls.GetKeyState(PinvokeEnums.VirtualKeyStates.VK_Q);
-            Console.WriteLine(numLockKeyState);
-            if ((numLockKeyState & 0x80) != 0)
+            numLockKeyState = PinvokeDlls.GetKeyState(PinvokeEnums.VirtualKeyStates.VK_NUMLOCK);
+            lbmKeyState = PinvokeDlls.GetKeyState(PinvokeEnums.VirtualKeyStates.VK_LBUTTON);
+            Console.WriteLine("NumLock: " + numLockKeyState);
+            Console.WriteLine("LMB: " + lbmKeyState);
+            if (numLockKeyState == 1)
             {
-                
+                if ((lbmKeyState & 0x80) != 0)
+                {
+                    Console.WriteLine(lbmKeyState);
+                    PinvokeDlls.keybd_event((byte) PinvokeEnums.VirtualKeyStates.VK_CAPITAL, 0, 0x0001 | 0x0002, 0);
+                    PinvokeDlls.keybd_event((byte) PinvokeEnums.VirtualKeyStates.VK_CAPITAL, 0, 0x0001, 0);
+                }
+                else
+                {
+                    PinvokeDlls.keybd_event((byte) PinvokeEnums.VirtualKeyStates.VK_CAPITAL, 0, 0x0002, 0);
+                }
             }
         }
     }
