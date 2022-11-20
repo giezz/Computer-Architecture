@@ -15,17 +15,21 @@ namespace task4
 
         private static void StaticLoad()
         {
-            ClassForStaticLoad.PaintLine3(
+            int width = ClassForStaticLoad.GetMonitorResolution()[0];
+            int height = ClassForStaticLoad.GetMonitorResolution()[1];
+            ClassForStaticLoad.PaintLine(
                 new IntPtr(0),
                 new Point(0, 0),
-                new Point(ClassForStaticLoad.GetMonitorResolution()[0], ClassForStaticLoad.GetMonitorResolution()[1]),
-                false
+                new Point(width, height),
+                false,
+                Color.Red
             );
-            ClassForStaticLoad.PaintLine3(
+            ClassForStaticLoad.PaintLine(
                 new IntPtr(0),
-                new Point(ClassForStaticLoad.GetMonitorResolution()[0], 0),
-                new Point(0, ClassForStaticLoad.GetMonitorResolution()[1]),
-                false
+                new Point(width, 0),
+                new Point(0, height),
+                false,
+                Color.White
             );
         }
 

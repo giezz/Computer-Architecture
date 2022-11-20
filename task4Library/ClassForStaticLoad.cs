@@ -6,6 +6,10 @@ namespace task4Library
 {
     public class ClassForStaticLoad
     {
+        /// <summary>
+        /// Get device X and Y resolution
+        /// </summary>
+        /// <returns>Array of two elements where [0] is device width, [1] is device height</returns>
         public static int[] GetMonitorResolution()
         {
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
@@ -13,28 +17,29 @@ namespace task4Library
                 int[] dims = new int[2];
                 IntPtr hdc = g.GetHdc();
 
-                // foreach (int cap in Enum.GetValues(typeof(DeviceCap)))
-                // {
-                //     int result = GetDeviceCaps(hdc, cap);
-                //     Console.WriteLine(string.Format("{0}: {1}", cap, result));
-                // }
-
                 dims[0] = GetDeviceCaps(hdc, DeviceCap.HORZRES);
                 dims[1] = GetDeviceCaps(hdc, DeviceCap.VERTRES);
                 g.ReleaseHdc();
                 return dims;
             }
         }
-
-
-        public static void PaintLine3(IntPtr hbitmap, Point start, Point end, bool erase)
+        
+        /// <summary>
+        /// Draw line
+        /// </summary>
+        /// <param name="hbitmap">Handle of window</param>
+        /// <param name="start">Start point</param>
+        /// <param name="end">End point</param>
+        /// <param name="erase">Erase?</param>
+        /// <param name="color">Color of line</param>
+        public static void PaintLine(IntPtr hbitmap, Point start, Point end, bool erase, Color color)
         {
             Graphics maskg = Graphics.FromHwnd(IntPtr.Zero);
             IntPtr pTarget = maskg.GetHdc();
             IntPtr pDC = CreateCompatibleDC(pTarget);
             IntPtr pOrig = SelectObject(pDC, pTarget);
 
-            Color penColor = Color.Blue;
+            Color penColor = color;
             int penWidth = 20;
 
             IntPtr pen = CreatePen(PenStyle.PS_SOLID | PenStyle.PS_GEOMETRIC | PenStyle.PS_ENDCAP_ROUND, penWidth,
